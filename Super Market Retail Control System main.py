@@ -64,11 +64,11 @@ def modifystockreco():
               for rec in mydata:
                      table.append(list(rec))
               print(tabulate(table))
+              modtable=[["ITEMCODE","ITEMNAME","QUANTITY","PRICE","DISCOUNT"]]
               s=int(input("Enter Item Code For Modifying:"))
               query="select * from stock where itemcode="+str(s)
               mycur.execute(query)
               mydata=mycur.fetchone()
-              modtable=[["ITEMCODE","ITEMNAME","QUANTITY","PRICE","DISCOUNT"]]
               if mydata!=None:
                      print("What Do you Want to Modify?")
                      print("1.Item Name")
@@ -88,11 +88,12 @@ def modifystockreco():
                      elif ch==4:
                             i4=int(input("Enter New Discount:"))
                             query="update stock set itemname={} where itemcode={}".format(i4,s)
-
-              print("Record Modified")
-              query1="select * from stock where itemcode="+str(s)
-              modtable.append(query1)
               mycur.execute(query)
+              print("Record Modified")
+              query="select * from stock where itemcode="+str(s)
+              mycur.execute(query)
+              mydata=mycur.fetchone()
+              modtable.append(list(mydata))
               print(tabulate(modtable))
               mycon.commit()
        except:
@@ -101,27 +102,39 @@ def modifystockreco():
 
 while True:
        print("=====MENU=====")
-       print("Select Your Choice")
-       print("1.Display Stock Record")
-       print("2.Add Stock Record")
-       print("3.Modify Stock Record")
-       print("4.Delete Stock Record")
-       print("5.Search Stock Record")
-       print("6.Exit")
-       ch=int(input("Enter Your Choice:"))
-       if ch==1:
-              displaystockreco()
-       elif ch==2:
-              addstockreco()
-       elif ch==3:
-              modifystockreco()
-       elif ch==5:
-              searchstockreco()
-       elif ch==6:
-              break
-       else:
-              print("Invalid Choice")
+       ch=int(input("Enter User Mode(1.CUSTOMER/2.EMPLOYEE)-"))
+       if ch==2:
+              ch=int(input("Enter Table to Operate on(1.stock/2.transaction/3.payoutrecord/4.supplier)-"))
+              if ch==1:
+                     while True:
+                            print("Select Your Choice")
+                            print("1.Display Stock Record")
+                            print("2.Add Stock Record")
+                            print("3.Modify Stock Record")
+                            print("4.Delete Stock Record")
+                            print("5.Search Stock Record")
+                            print("6.Exit")
+                            ch=int(input("Enter Your Choice:"))
+                            if ch==1:
+                                   displaystockreco()
+                            elif ch==2:
+                                   addstockreco()
+                            elif ch==3:
+                                   modifystockreco()
+                            elif ch==4:
+                                   delstockreco()
+                            elif ch==5:
+                                   searchstockreco()
+                            elif ch==6:
+                                   break
+                            else:
+                                   print("Invalid Choice")
+                     else:
+                            print("Invalid Choice")
+              else:
+                     print("Invalid Choice")
        
+                            
 
        
 
