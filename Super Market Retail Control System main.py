@@ -40,8 +40,8 @@ def delstockreco():
        mycon.commit()
 def searchstockreco():
        try:
-              s=int(input("Enter Item Code For Searching:"))
-              query="select * from stock where itemcode="+str(s)
+              s=(input("Enter Item Name For Searching:"))
+              query="select * from stock where itemname="+str(s)
               mycur.execute(query)
               mydata=mycur.fetchone()
               deltable=[["ITEMCODE","ITEMNAME","QUANTITY","PRICE","DISCOUNT"]]
