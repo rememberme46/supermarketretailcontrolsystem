@@ -104,7 +104,7 @@ while True:
        print("=====MENU=====")
        ch=int(input("Enter User Mode(1.CUSTOMER/2.EMPLOYEE)-"))
        if ch==2:
-              ch=int(input("Enter Table to Operate on(1.stock/2.transaction/3.payoutrecord/4.supplier)-"))
+              ch=int(input("Enter Table to Operate on(1.stock/2.transaction"))
               if ch==1:
                      while True:
                             print("Select Your Choice")
