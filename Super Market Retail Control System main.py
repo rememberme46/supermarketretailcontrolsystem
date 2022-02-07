@@ -17,7 +17,7 @@ def displaystockreco():
        query=("select * from stock")
        mycur.execute(query)
        mydata=mycur.fetchall()
-       table=[["ITEMCODE","ITEMNAME","QUANTITY","PRICE","DISCOUNT","DEALER"]]
+       table=[["ITEMCODE","ITEMNAME","QUANTITY","PRICE","DISCOUNT"]]
        for rec in mydata:
               table.append(list(rec))
        print(tabulate(table))
@@ -26,52 +26,39 @@ def displaystockreco():
        
               
 def addstockreco():
-       try:
-              
-              itemcode=int(input("Enter Item Code:"))
-              itemname=input("Enter Item Name:")
-              qty=int(input("Enter Quantity in Stock:"))
-              price=float(input("Enter Price of Item:"))
-              discount=int(input("Enter Discount % Applicable:"))
-              dealer=input("Enter Dealer Name:")
-              query="insert into stock values({},'{}',{},{},{},'{}')".format(itemcode,itemname,qty,price,discount,dealer)
-              mycur.execute(query)
-              print("Record Succesfully Inserted")
-              mycon.commit()
-       except:
-              print("Invalid Choice")
+       itemcode=int(input("Enter Item Code:"))
+       itemname=input("Enter Item Name:")
+       qty=int(input("Enter Quantity in Stock:"))
+       price=float(input("Enter Price of Item:"))
+       discount=int(input("Enter Discount % Applicable:"))
+       query="insert into stock values({},'{}',{},{},{})".format(itemcode,itemname,qty,price,discount)
+       mycur.execute(query)
+       print("Record Succesfully Inserted")
+       mycon.commit()
        input("Press Enter To Continue")
-       clear()
 def delstockreco():
-       try:
-              
-              itemdel=int(input("Enter Item Code to be Deleted"))
-              query="select * from stock where itemcode="+str(itemdel)
-              mycur.execute(query)
-              mydata=mycur.fetchone()
-              deltable=[["ITEMCODE","ITEMNAME","QUANTITY","PRICE","DISCOUNT","DEALER"]]
-              if mydata!=None:
-                     deltable.append(list(mydata))
-                     print(tabulate(deltable))
-                     ans=input("Do you want to Delete?:")
-                     if ans=="y" or ans=="Y":
-                            query="delete from stock where itemcode="+str(itemdel)
-              mycur.execute(query)
-              mycon.commit()
-              
-       except:
-              print("Invalid Choice")
+       itemdel=int(input("Enter Item Code to be Deleted"))
+       query="select * from stock where itemcode="+str(itemdel)
+       mycur.execute(query)
+       mydata=mycur.fetchone()
+       deltable=[["ITEMCODE","ITEMNAME","QUANTITY","PRICE","DISCOUNT"]]
+       if mydata!=None:
+              deltable.append(list(mydata))
+              print(tabulate(deltable))
+              ans=input("Do you want to Delete?:")
+              if ans=="y" or ans=="Y":
+                     query="delete from stock where itemcode="+str(itemdel)
+       mycur.execute(query)
+       mycon.commit()
        input("Press Enter To Continue")
        clear()
-              
-              
 def searchstockreco():
        try:
               n=(input("Enter Item Name For Searching:"))
               query="select * from stock where itemname= '%s'" %(n)
               mycur.execute(query)
               mydata=mycur.fetchone()
-              deltable=[["ITEMCODE","ITEMNAME","QUANTITY","PRICE","DISCOUNT","DEALER"]]
+              deltable=[["ITEMCODE","ITEMNAME","QUANTITY","PRICE","DISCOUNT"]]
               if mydata!=None:
                      deltable.append(list(mydata))
                      print("Record Found And Is Available")
@@ -89,11 +76,11 @@ def modifystockreco():
               query=("select * from stock")
               mycur.execute(query)
               mydata=mycur.fetchall()
-              table=[["ITEMCODE","ITEMNAME","QUANTITY","PRICE","DISCOUNT","DEALER"]]
+              table=[["ITEMCODE","ITEMNAME","QUANTITY","PRICE","DISCOUNT"]]
               for rec in mydata:
                      table.append(list(rec))
               print(tabulate(table))
-              modtable=[["ITEMCODE","ITEMNAME","QUANTITY","PRICE","DISCOUNT","DEALER"]]
+              modtable=[["ITEMCODE","ITEMNAME","QUANTITY","PRICE","DISCOUNT"]]
               s=int(input("Enter Item Code For Modifying:"))
               query="select * from stock where itemcode="+str(s)
               mycur.execute(query)
@@ -133,14 +120,6 @@ def modifystockreco():
        clear()
 
 while True:
-       ch=input("Enter Mode of Operation(1.Customer/2.Employee))")
-       if ch==1:
-              print("=========INVENTORY=========")
-              displaystockreco()
-              while True:
-                     b1=int(input("Enter Item Codes You Want To Buy:"))
-                     
-       
        print("=========MENU=========")
        tab=[["==Select Your Choice=="],["1.Display Stock Record"],["2.Add Stock Record"],["3.Modify Stock Record"],["4.Delete Stock Record"],["5.Search Stock Record"],["6.Exit"]]
        print(tabulate(tab))
