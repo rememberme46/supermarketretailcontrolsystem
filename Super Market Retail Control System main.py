@@ -1,10 +1,8 @@
 import mysql.connector as ms
 from tabulate import tabulate
-from os import system,name
+import os
 from time import sleep
-def clear():
-       if name=="nt":
-              _ = system('cls')
+clear = lambda: os.system('cls')
 
 
 mycon=ms.connect(host="localhost",user="root",passwd="nps@123",database="supermarketretail")
@@ -21,6 +19,7 @@ def displaystockreco():
               table.append(list(rec))
        print(tabulate(table))
        input("Press Enter To Continue")
+       clear()
        
               
 def addstockreco():
@@ -49,6 +48,7 @@ def delstockreco():
        mycur.execute(query)
        mycon.commit()
        input("Press Enter To Continue")
+       clear()
 def searchstockreco():
        try:
               n=(input("Enter Item Name For Searching:"))
@@ -66,6 +66,7 @@ def searchstockreco():
               if mydata==None:
                      print("Record Not Available")
        input("Press Enter To Continue")
+       clear()
 
 def modifystockreco():
        try:
@@ -108,11 +109,12 @@ def modifystockreco():
               modtable.append(list(mydata))
               print(tabulate(modtable))
               mycon.commit()
-       input("Press Enter To Continue")
+              
        except:
               if mydata==None:
                      print("Record Not Available")
        input("Press Enter To Continue")
+       clear()
 
 while True:
        print("=========MENU=========")
@@ -134,8 +136,7 @@ while True:
        else:
               print("Invalid Choice")
 
-sleep(2)
-clear()
+
 
                             
 
