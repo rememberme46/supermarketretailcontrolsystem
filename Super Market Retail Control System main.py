@@ -1,5 +1,12 @@
 import mysql.connector as ms
 from tabulate import tabulate
+from os import system,name
+from time import sleep
+def clear():
+       if name=="nt":
+              _ = system('cls')
+
+
 mycon=ms.connect(host="localhost",user="root",passwd="nps@123",database="supermarketretail")
 if mycon.is_connected()==True:
        print("Connection Established")
@@ -13,6 +20,8 @@ def displaystockreco():
        for rec in mydata:
               table.append(list(rec))
        print(tabulate(table))
+       input("Press Enter To Continue")
+       
               
 def addstockreco():
        itemcode=int(input("Enter Item Code:"))
@@ -24,6 +33,7 @@ def addstockreco():
        mycur.execute(query)
        print("Record Succesfully Inserted")
        mycon.commit()
+       input("Press Enter To Continue")
 def delstockreco():
        itemdel=int(input("Enter Item Code to be Deleted"))
        query="select * from stock where itemcode="+str(itemdel)
@@ -38,6 +48,7 @@ def delstockreco():
                      query="delete from stock where itemcode="+str(itemdel)
        mycur.execute(query)
        mycon.commit()
+       input("Press Enter To Continue")
 def searchstockreco():
        try:
               n=(input("Enter Item Name For Searching:"))
@@ -54,6 +65,7 @@ def searchstockreco():
        except:
               if mydata==None:
                      print("Record Not Available")
+       input("Press Enter To Continue")
 
 def modifystockreco():
        try:
@@ -96,9 +108,11 @@ def modifystockreco():
               modtable.append(list(mydata))
               print(tabulate(modtable))
               mycon.commit()
+       input("Press Enter To Continue")
        except:
               if mydata==None:
                      print("Record Not Available")
+       input("Press Enter To Continue")
 
 while True:
        print("=========MENU=========")
@@ -119,7 +133,10 @@ while True:
               break
        else:
               print("Invalid Choice")
-       
+
+sleep(2)
+clear()
+
                             
 
        
