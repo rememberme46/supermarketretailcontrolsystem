@@ -9,6 +9,8 @@ mycon=ms.connect(host="localhost",user="root",passwd="nps@123",database="superma
 if mycon.is_connected()==True:
        print("Connection Established")
        mycur=mycon.cursor()
+       sleep(1)
+       clear()
 
 def displaystockreco():
        query=("select * from stock")
