@@ -120,7 +120,7 @@ def modifystockreco():
 
 while True:
        print("=========MENU=========")
-       tab=[["-Select Your Choice-"],["1.Display Stock Record"],["2.Add Stock Record"],["3.Modify Stock Record"],["4.Delete Stock Record"],["5.Search Stock Record"],["6.Exit"]]
+       tab=[["==Select Your Choice=="],["1.Display Stock Record"],["2.Add Stock Record"],["3.Modify Stock Record"],["4.Delete Stock Record"],["5.Search Stock Record"],["6.Exit"]]
        print(tabulate(tab))
        ch=int(input("Enter Your Choice:"))
        if ch==1:
