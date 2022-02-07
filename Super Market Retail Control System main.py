@@ -40,8 +40,8 @@ def delstockreco():
        mycon.commit()
 def searchstockreco():
        try:
-              s=(input("Enter Item Name For Searching:"))
-              query="select * from stock where itemname="+str(s)
+              n=(input("Enter Item Name For Searching:"))
+              query="select * from stock where itemname= '%s'" %(n)
               mycur.execute(query)
               mydata=mycur.fetchone()
               deltable=[["ITEMCODE","ITEMNAME","QUANTITY","PRICE","DISCOUNT"]]
@@ -101,38 +101,24 @@ def modifystockreco():
                      print("Record Not Available")
 
 while True:
-       print("=====MENU=====")
-       ch=int(input("Enter User Mode(1.CUSTOMER/2.EMPLOYEE)-"))
-       if ch==2:
-              ch=int(input("Enter Table to Operate on(1.stock/2.transaction"))
-              if ch==1:
-                     while True:
-                            print("Select Your Choice")
-                            print("1.Display Stock Record")
-                            print("2.Add Stock Record")
-                            print("3.Modify Stock Record")
-                            print("4.Delete Stock Record")
-                            print("5.Search Stock Record")
-                            print("6.Exit")
-                            ch=int(input("Enter Your Choice:"))
-                            if ch==1:
-                                   displaystockreco()
-                            elif ch==2:
-                                   addstockreco()
-                            elif ch==3:
-                                   modifystockreco()
-                            elif ch==4:
-                                   delstockreco()
-                            elif ch==5:
-                                   searchstockreco()
-                            elif ch==6:
-                                   break
-                            else:
-                                   print("Invalid Choice")
-                     else:
-                            print("Invalid Choice")
-              else:
-                     print("Invalid Choice")
+       print("=========MENU=========")
+       tab=[["-Select Your Choice-"],["1.Display Stock Record"],["2.Add Stock Record"],["3.Modify Stock Record"],["4.Delete Stock Record"],["5.Search Stock Record"],["6.Exit"]]
+       print(tabulate(tab))
+       ch=int(input("Enter Your Choice:"))
+       if ch==1:
+              displaystockreco()
+       elif ch==2:
+              addstockreco()
+       elif ch==3:
+              modifystockreco()
+       elif ch==4:
+              delstockreco()
+       elif ch==5:
+              searchstockreco()
+       elif ch==6:
+              break
+       else:
+              print("Invalid Choice")
        
                             
 
