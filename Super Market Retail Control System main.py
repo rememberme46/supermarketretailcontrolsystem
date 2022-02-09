@@ -133,21 +133,37 @@ def modifystockreco():
                      print("Record Not Available")
        input("Press Enter To Continue")
        clear()
+def dispbuyreco():
+       query="select itemcode,itemname,qty,price,discount from stock"
+       mycur.execute(query)
+       table=[["ITEMCODE","ITEMNAME","QUANTITY","PRICE","DISCOUNT"]]
+       mydata=mycur.fetchall()
+       for rec in mydata:
+              table.append(rec)
+       print(tabulate(table))
+def buyreco():
+       while True:
+              p1=int(input("Enter Itemcode you want to buy:"))
+              p2=int(input("Enter Number of items you want to buy:"))
+              query="select discount from stock where itemcode="+str(p1)
+              mycur.execute(query)
+              mydata=mycur.fetchone()
+              print(mydata,type(mydata))
 def menu1():
        while True:
               print("=========MENU=========")
               tab=[["==Select Your Choice=="],["1.View Inventory"],["2.BUY"],["3.View Bill"],["4.Exit"]]
               print(tabulate(tab))
               ch=int(input("Enter Your Choice:"))
+              i1=input("Enter Customer Name:")
+              i2=int(input("Enter customer phone number:"))
+              query="insert into salrecord values('{}',{})".format(i1,i2)
               if ch==1:
-                     query="select itemcode,itemname,qty,price,discount from stock"
-                     mycur.execute(query)
-                     table=[["ITEMCODE","ITEMNAME","QUANTITY","PRICE","DISCOUNT"]]
-                     mydata=mycur.fetchall()
-                     for rec in mydata:
-                            table.append(rec)
-                     print(tabulate(table))
-                     
+                     dispbuyreco()
+
+              if ch==2:
+                     buyreco()
+                            
               
 def menu2():
        
