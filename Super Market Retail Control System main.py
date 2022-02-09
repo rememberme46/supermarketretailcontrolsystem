@@ -133,29 +133,58 @@ def modifystockreco():
                      print("Record Not Available")
        input("Press Enter To Continue")
        clear()
+def menu1():
+       while True:
+              print("=========MENU=========")
+              tab=[["==Select Your Choice=="],["1.View Inventory"],["2.BUY"],["3.View Bill"],["4.Exit"]]
+              print(tabulate(tab))
+              ch=int(input("Enter Your Choice:"))
+              if ch==1:
+                     query="select itemcode,itemname,qty,price,discount from stock"
+                     mycur.execute(query)
+                     table=[["ITEMCODE","ITEMNAME","QUANTITY","PRICE","DISCOUNT"]]
+                     mydata=mycur.fetchall()
+                     for rec in mydata:
+                            table.append(rec)
+                     print(tabulate(table))
+                     
+              
+def menu2():
+       
+       while True:
+              print("=========MENU=========")
+              tab=[["==Select Your Choice=="],["1.Display Stock Record"],["2.Add Stock Record"],["3.Modify Stock Record"],["4.Delete Stock Record"],["5.Search Stock Record"],["6.Exit"]]
+              print(tabulate(tab))
+              ch=int(input("Enter Your Choice:"))
+              if ch==1:
+                     displaystockreco()
+              elif ch==2:
+                     addstockreco()
+              elif ch==3:
+                     modifystockreco()
+              elif ch==4:
+                     delstockreco()
+              elif ch==5:
+                     searchstockreco()
+              elif ch==6:
+                     break
+              else:
+                     print("Invalid Choice")
 
 while True:
-       print("=========MENU=========")
-       tab=[["==Select Your Choice=="],["1.Display Stock Record"],["2.Add Stock Record"],["3.Modify Stock Record"],["4.Delete Stock Record"],["5.Search Stock Record"],["6.Exit"]]
-       print(tabulate(tab))
-       ch=int(input("Enter Your Choice:"))
-       if ch==1:
-              displaystockreco()
-       elif ch==2:
-              addstockreco()
-       elif ch==3:
-              modifystockreco()
-       elif ch==4:
-              delstockreco()
-       elif ch==5:
-              searchstockreco()
-       elif ch==6:
-              break
-       else:
-              print("Invalid Choice")
+              print("=========MENU=========")
+              tab=[["==Select Your Choice=="],["1.Customer Mode"],["2.Employee Mode"],["3.Exit"]]
+              print(tabulate(tab))
+              ch=int(input("Enter Your Choice:"))
+              if ch==1:
+                     menu1()
+              elif ch==2:
+                     menu2()
+              elif ch==3:
 
-
-
+                     break
+              else:
+                     print("Invalid Choice")
                             
 
        
