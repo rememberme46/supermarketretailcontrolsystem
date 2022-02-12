@@ -147,19 +147,7 @@ def modifystockreco():
        input("Press Enter To Continue")
        clear()
 
-def transition():
-       mycur.execute("create table transition(itemcodes int,itemnames varchar(30),price int,qty int,amt float(15,2),total float(15,2) default 0)")
-       mycur.execute("select price from stock where itemcode="+str(p1)
-       mydata=mycur.fetchone()
-       a1=int(mydata)
-       mycur.execute("select qty from stock where itemcode="+str(p1)
-       mydata=mycur.fetchone()
-       a2=int(mydata)
-       t=a1*a2
-       mycur.execute("insert into transition(itemcodes,itemnames,price,qty,amt) values({},'{}',{},{},{})".format(p1,p2,a1,a2,t)
-       mycur.execute("select sum(amt) from transition
-       mycur.execute("drop table transition")
-       mycon.commit()
+
        
 def dispbuyreco():
        query="select itemcode,itemname,qty,price,discount from stock"
@@ -173,21 +161,45 @@ def dispbuyreco():
        clear()
 def buyreco():
        while True:
+              global p1
+              global p2
               p1=int(input("Enter Itemcode you want to buy:"))
               p2=int(input("Enter Number of items you want to buy:"))
               transition()
               ch=input("Do you want to buy more items?:")
               if ch.lower()=="y":
-                     
-              input("Press Enter To Continue")
-              clear()
-def adddetail():
-       i1=input("Enter Customer Name:")
-       i2=int(input("Enter customer phone number:"))
-       query="insert into salrecord values('{}',{})".format(i1,i2)
+                     buyreco()
+              else:
+                     break
        input("Press Enter To Continue")
        clear()
 
+       
+def adddetail():
+       global i1
+       i1=input("Enter Customer Name:")
+       i2=int(input("Enter customer phone number:"))
+       query="insert into salerecord(customername,phoneno) values('{}',{})".format(i1,i2)
+       mycur.execute(query)
+       mycon.commit()
+       input("Press Enter To Continue")
+       clear()
+       
+def transition():
+       mycur.execute("create table transition(itemcodes int,itemnames varchar(30),price int,qty int,amt float(15,2)")
+       mycur.execute("select price from stock where itemcode=")+str(p1)
+       mydata=mycur.fetchone()
+       a1=int(mydata)
+       mycur.execute("select qty from stock where itemcode=")+str(p1)
+       mydata=mycur.fetchone()
+       a2=int(mydata)
+       t=a1*a2
+       mycur.execute("insert into transition(itemcodes,itemnames,price,qty,amt) values({},'{}',{},{},{})").format(p1,p2,a1,a2,t)
+       mycur.execute("select sum(amt) from transition")
+       mydata=mycur.fetchone()
+       a3=int(mydata)
+       mycur.execute("update salerecord set amtpay={} where customer name='{}'").format(a3,i1)
+       mycon.commit()
 def menu1():
        adddetail()
        while True:
