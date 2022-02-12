@@ -6,13 +6,26 @@ clear = lambda: os.system('cls')
 
 
 
-mycon=ms.connect(host="localhost",user="root",passwd="nps@123",database="supermarketretail")
+mycon=ms.connect(host="localhost",user="root",passwd="nps@123",database="mysql")
 if mycon.is_connected()==True:
        print("Connection Established")
        mycur=mycon.cursor()
        sleep(1)
        clear()
 
+def setup1():
+    mycur.execute("create database supermarketretail")
+    mycur.execute("use supermarketretail")
+    mycur.execute("create table stock(itemcode int primary key not null,itemname varchar(30) not null,qty int,price float(15,2),discount float(15,2),dealername varchar(30))")
+    mycur.execute("create table salerecord(customername varchar(30) ,phoneno bigint,amtpay float(15,2))")
+    print("Initial Setup Done")
+    input("Press Enter to Continue")
+    mycon.commit()
+    input("Press Enter To Continue")
+    clear()
+def setup2():
+    mycur.execute("use supermarketretail")
+    mycon.commit()
 def displaystockreco():
        try:
               query=("select * from stock")
@@ -133,6 +146,21 @@ def modifystockreco():
                      print("Record Not Available")
        input("Press Enter To Continue")
        clear()
+
+def transition():
+       mycur.execute("create table transition(itemcodes int,itemnames varchar(30),price int,qty int,amt float(15,2),total float(15,2) default 0)")
+       mycur.execute("select price from stock where itemcode="+str(p1)
+       mydata=mycur.fetchone()
+       a1=int(mydata)
+       mycur.execute("select qty from stock where itemcode="+str(p1)
+       mydata=mycur.fetchone()
+       a2=int(mydata)
+       t=a1*a2
+       mycur.execute("insert into transition(itemcodes,itemnames,price,qty,amt) values({},'{}',{},{},{})".format(p1,p2,a1,a2,t)
+       mycur.execute("select sum(amt) from transition
+       mycur.execute("drop table transition")
+       mycon.commit()
+       
 def dispbuyreco():
        query="select itemcode,itemname,qty,price,discount from stock"
        mycur.execute(query)
@@ -141,29 +169,41 @@ def dispbuyreco():
        for rec in mydata:
               table.append(rec)
        print(tabulate(table))
+       input("Press Enter To Continue")
+       clear()
 def buyreco():
        while True:
               p1=int(input("Enter Itemcode you want to buy:"))
               p2=int(input("Enter Number of items you want to buy:"))
-              query="select discount from stock where itemcode="+str(p1)
-              mycur.execute(query)
-              mydata=mycur.fetchone()
-              print(mydata,type(mydata))
+              transition()
+              ch=input("Do you want to buy more items?:")
+              if ch.lower()=="y":
+                     
+              input("Press Enter To Continue")
+              clear()
+def adddetail():
+       i1=input("Enter Customer Name:")
+       i2=int(input("Enter customer phone number:"))
+       query="insert into salrecord values('{}',{})".format(i1,i2)
+       input("Press Enter To Continue")
+       clear()
+
 def menu1():
+       adddetail()
        while True:
               print("=========MENU=========")
               tab=[["==Select Your Choice=="],["1.View Inventory"],["2.BUY"],["3.View Bill"],["4.Exit"]]
               print(tabulate(tab))
               ch=int(input("Enter Your Choice:"))
-              i1=input("Enter Customer Name:")
-              i2=int(input("Enter customer phone number:"))
-              query="insert into salrecord values('{}',{})".format(i1,i2)
+             
               if ch==1:
+                     clear()
                      dispbuyreco()
-
+                     
               if ch==2:
+                     clear()
                      buyreco()
-                            
+             
               
 def menu2():
        
@@ -174,34 +214,47 @@ def menu2():
               ch=int(input("Enter Your Choice:"))
               if ch==1:
                      displaystockreco()
+                     clear()
               elif ch==2:
                      addstockreco()
+                     clear()
               elif ch==3:
                      modifystockreco()
+                     clear()
               elif ch==4:
                      delstockreco()
+                     clear()
               elif ch==5:
                      searchstockreco()
+                     clear()
               elif ch==6:
+                     clear()
                      break
               else:
                      print("Invalid Choice")
-
+                     clear()
+              
 while True:
               print("=========MENU=========")
-              tab=[["==Select Your Choice=="],["1.Customer Mode"],["2.Employee Mode"],["3.Exit"]]
+              tab=[["==Select Your Choice=="],["1.Initial Setup"],["2.Customer Mode"],["3.Employee Mode"],["4.Exit"]]
               print(tabulate(tab))
               ch=int(input("Enter Your Choice:"))
               if ch==1:
-                     menu1()
+                     setup1()
               elif ch==2:
-                     menu2()
+                     setup2()
+                     clear()
+                     menu1()
+                     clear()
               elif ch==3:
-
+                     setup2()
+                     clear()
+                     menu2()
+                     clear()
+              elif ch==4:
+                     clear()
                      break
               else:
                      print("Invalid Choice")
+                     clear()
                             
-
-       
-
