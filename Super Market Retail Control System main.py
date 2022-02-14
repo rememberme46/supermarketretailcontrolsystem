@@ -18,6 +18,8 @@ def setup1():
     mycur.execute("use supermarketretail")
     mycur.execute("create table stock(itemcode int primary key not null,itemname varchar(30) not null,qty int,price float(15,2),discount float(15,2),dealername varchar(30))")
     mycur.execute("create table salerecord(customername varchar(30) ,phoneno bigint,amtpay float(15,2))")
+    os.system("pip install pyinstaller")
+    os.system("pip install tabulate")
     print("Initial Setup Done")
     input("Press Enter to Continue")
     mycon.commit()
@@ -158,22 +160,45 @@ def dispbuyreco():
               table.append(rec)
        print(tabulate(table))
        input("Press Enter To Continue")
-       clear()
+       
 def buyreco():
-       while True:
-              global p1
-              global p2
-              p1=int(input("Enter Itemcode you want to buy:"))
-              p2=int(input("Enter Number of items you want to buy:"))
-              transition()
-              ch=input("Do you want to buy more items?:")
-              if ch.lower()=="y":
-                     buyreco()
-              else:
-                     break
-       input("Press Enter To Continue")
-       clear()
-
+       global dtot
+       
+       tot=0
+       dtot=0
+       p1=int(input("Enter itemcode you want to buy:"))
+       p2=int(input("Enter number you want to buy:"))
+       mycur.execute("use supermarketretail")
+       query=("select price,discount,qty from stock where itemcode=")+str(p1)
+       mycur.execute(query)
+       data=mycur.fetchone()
+       a,b,c=data
+       d=c-p2
+       tot=tot+(p2*(a))
+       dtot=dtot+(tot*((100-b)/100))
+       query=("update salerecord set amtpay={} where customername='{}'").format(dtot,i1)
+       mycur.execute(query)
+       mycon.commit()
+       query=("update stock set qty={} where itemcode={}").format(d,p1)
+       mycur.execute(query)
+       mycon.commit()
+       ch=input("Do you want to buy more items?(y/n)")
+       if ch=="y" or ch=="Y":
+              clear()
+              buyreco()
+       else:
+              clear()
+              menu1()
+       
+              
+def viewbill():
+       query=("select * from salerecord")
+       mycur.execute(query)
+       data=mycur.fetchone()
+       table=[["CUSTOMER NAME"],["CUSTOMER PHONE NUMBER"],["TOTAL AMOUNT PAYABALE"]]
+       table.append(data)
+       print(tabulate(table))
+       
        
 def adddetail():
        global i1
@@ -185,36 +210,28 @@ def adddetail():
        input("Press Enter To Continue")
        clear()
        
-def transition():
-       mycur.execute("create table transition(itemcodes int,itemnames varchar(30),price int,qty int,amt float(15,2)")
-       mycur.execute("select price from stock where itemcode=")+str(p1)
-       mydata=mycur.fetchone()
-       a1=int(mydata)
-       mycur.execute("select qty from stock where itemcode=")+str(p1)
-       mydata=mycur.fetchone()
-       a2=int(mydata)
-       t=a1*a2
-       mycur.execute("insert into transition(itemcodes,itemnames,price,qty,amt) values({},'{}',{},{},{})").format(p1,p2,a1,a2,t)
-       mycur.execute("select sum(amt) from transition")
-       mydata=mycur.fetchone()
-       a3=int(mydata)
-       mycur.execute("update salerecord set amtpay={} where customer name='{}'").format(a3,i1)
-       mycon.commit()
+
 def menu1():
-       adddetail()
        while True:
               print("=========MENU=========")
-              tab=[["==Select Your Choice=="],["1.View Inventory"],["2.BUY"],["3.View Bill"],["4.Exit"]]
+              tab=[["==Select Your Choice=="],["1.VIEW INVENTORY AND BUY"],["2.View Bill"],["3.Exit"]]
               print(tabulate(tab))
               ch=int(input("Enter Your Choice:"))
-             
+              
               if ch==1:
                      clear()
                      dispbuyreco()
-                     
-              if ch==2:
-                     clear()
                      buyreco()
+              elif ch==2:
+                     
+                     clear()
+                     viewbill()
+              elif ch==3:
+                     clear()
+                     break
+              else:
+                     print("Invalid choice")
+                     clear()
              
               
 def menu2():
@@ -225,20 +242,25 @@ def menu2():
               print(tabulate(tab))
               ch=int(input("Enter Your Choice:"))
               if ch==1:
+                     clear()
                      displaystockreco()
-                     clear()
+                     
               elif ch==2:
+                     clear()
                      addstockreco()
-                     clear()
+                     
               elif ch==3:
+                     clear()
                      modifystockreco()
-                     clear()
+                     
               elif ch==4:
+                     clear()
                      delstockreco()
-                     clear()
+                    
               elif ch==5:
-                     searchstockreco()
                      clear()
+                     searchstockreco()
+                     
               elif ch==6:
                      clear()
                      break
@@ -256,6 +278,8 @@ while True:
               elif ch==2:
                      setup2()
                      clear()
+                     adddetail()
+                     clear()
                      menu1()
                      clear()
               elif ch==3:
@@ -269,4 +293,7 @@ while True:
               else:
                      print("Invalid Choice")
                      clear()
+
+
+
                             
