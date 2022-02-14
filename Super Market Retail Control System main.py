@@ -249,6 +249,7 @@ def viewbill():
        table=[["NAME","AMOUNT PAYABALE"]]
        table.append(list(data))
        print(tabulate(table))
+       clear()
        
        
 def adddetail():
