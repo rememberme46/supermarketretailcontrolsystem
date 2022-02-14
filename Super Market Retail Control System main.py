@@ -58,6 +58,7 @@ def addstockreco():
        except:
               print("Invalid Choice")
        input("Press Enter To Continue")
+       clear()
 def delstockreco():
        try:
        
@@ -162,41 +163,91 @@ def dispbuyreco():
        input("Press Enter To Continue")
        
 def buyreco():
-       global dtot
-       
-       tot=0
-       dtot=0
-       p1=int(input("Enter itemcode you want to buy:"))
-       p2=int(input("Enter number you want to buy:"))
-       mycur.execute("use supermarketretail")
-       query=("select price,discount,qty from stock where itemcode=")+str(p1)
-       mycur.execute(query)
-       data=mycur.fetchone()
-       a,b,c=data
-       d=c-p2
-       tot=tot+(p2*(a))
-       dtot=dtot+(tot*((100-b)/100))
-       query=("update salerecord set amtpay={} where customername='{}'").format(dtot,i1)
-       mycur.execute(query)
-       mycon.commit()
-       query=("update stock set qty={} where itemcode={}").format(d,p1)
-       mycur.execute(query)
-       mycon.commit()
-       ch=input("Do you want to buy more items?(y/n)")
-       if ch=="y" or ch=="Y":
-              clear()
-              buyreco()
-       else:
-              clear()
-              menu1()
-       
+       try:
+              global dtot
               
+              tot=0
+              dtot=0
+              p1=int(input("Enter itemcode you want to buy:"))
+              p2=int(input("Enter number you want to buy:"))
+              mycur.execute("use supermarketretail")
+              query=("select price,discount,qty from stock where itemcode=")+str(p1)
+              mycur.execute(query)
+              data=mycur.fetchone()
+              a,b,c=data
+              if c!=0:
+                     d=c-p2
+                     tot=tot+(p2*(a))
+                     dtot=tot*((100-b)/100)
+                     query=("update salerecord set amtpay={} where customername='{}'").format(dtot,i1)
+                     mycur.execute(query)
+                     mycon.commit()
+                     query=("update stock set qty={} where itemcode={}").format(d,p1)
+                     mycur.execute(query)
+                     mycon.commit()
+                     ch=input("Do you want to buy more items?(y/n)")
+                     if ch=="y" or ch=="Y":
+                            clear()
+                            buyreconew()
+                     else:
+                            clear()
+                            menu1()
+              else:
+                     print("OUT OF STOCK")
+                     clear()
+                     menu1()
+       except:
+              input("Please use valid choice")
+              clear()
+
+def buyreconew():
+       try:
+              
+              global dtot
+              
+              tot=0
+              dtot=0
+              atot=0
+              p1=int(input("Enter itemcode you want to buy:"))
+              p2=int(input("Enter number you want to buy:"))
+              mycur.execute("use supermarketretail")
+              query=("select price,discount,qty from stock where itemcode=")+str(p1)
+              mycur.execute(query)
+              data=mycur.fetchone()
+              query=("select amtpay from salerecord where customername='{}'").format(i1)
+              mycur.execute(query)
+              mydata=mycur.fetchone()
+              atot=int(mydata)
+              a,b,c=data
+              d=c-p2
+              tot=tot+(p2*(a))
+              dtot=tot*((100-b)/100)
+              atot=atot+dtot
+              query=("update salerecord set amtpay={} where customername='{}'").format(atot,i1)
+              mycur.execute(query)
+              mycon.commit()
+              query=("update stock set qty={} where itemcode={}").format(d,p1)
+              mycur.execute(query)
+              mycon.commit()
+              ch=input("Do you want to buy more items?(y/n)")
+              if ch=="y" or ch=="Y":
+                     clear()
+                     buyreconew()
+              else:
+                     clear()
+                     menu1()
+       except:
+              input("Please use valid choice")
+              clear()
+                     
+      
 def viewbill():
-       query=("select * from salerecord")
+       query=("select customername,amtpay from salerecord where customername='{}'").format(i1)
        mycur.execute(query)
        data=mycur.fetchone()
-       table=[["CUSTOMER NAME"],["CUSTOMER PHONE NUMBER"],["TOTAL AMOUNT PAYABALE"]]
-       table.append(data)
+       print("======BILL======")
+       table=[["NAME","AMOUNT PAYABALE"]]
+       table.append(list(data))
        print(tabulate(table))
        
        
