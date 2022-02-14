@@ -185,15 +185,10 @@ def buyreco():
                      query=("update stock set qty={} where itemcode={}").format(d,p1)
                      mycur.execute(query)
                      mycon.commit()
-                     ch=input("Do you want to buy more items?(y/n)")
-                     if ch=="y" or ch=="Y":
-                            clear()
-                            buyreconew()
-                     else:
-                            clear()
-                            menu1()
+                     input("ADDED TO CART,Press to continue")
               else:
                      print("OUT OF STOCK")
+                     input("Press Enter to continue")
                      clear()
                      menu1()
        except:
