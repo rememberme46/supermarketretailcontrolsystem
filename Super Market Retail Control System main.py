@@ -302,6 +302,7 @@ while True:
             menu1()
             clear()
         elif ch==3:
+            clear()
             menu2()
             clear()
         elif ch==4:
