@@ -4,7 +4,6 @@ import os
 from time import sleep
 import csv
 clear = lambda: os.system('cls')
-
 def setup1():
     a1=input("Enter Host name:")
     a2=input("Enter user name:")
@@ -30,21 +29,7 @@ def setup1():
     print("Initial Setup Done")
     input("Press Enter to Continue")
     mycon.commit()
-    clear()
-def setup2():
-    file=open("Data.csv")
-    reader=csv.reader(file)
-    try:
-        for rec in reader:
-            a1=rec[0]
-            a2=rec[1]
-            a3=rec[2]
-    except:
-        pass
-    mycon=ms.connect(host=a1,user=a2,passwd=a3,database="mysql")
-    mycur=mycon.cursor()
-    mycur.execute("use supermarketretail")
-    mycon.commit()
+    clear() 
 def displaystockreco():
        try:
               query=("select * from stock")
@@ -228,6 +213,19 @@ def adddetail():
        mycon.commit()
        input("Press Enter To Continue")
        clear()
+def dispsale():
+    try:
+              query=("select * from salerecord")
+              mycur.execute(query)
+              mydata=mycur.fetchall()
+              table=[["NAME","PHONE NO.","AMOUNT RECIEVED"]]
+              for rec in mydata:
+                     table.append(list(rec))
+              print(tabulate(table))
+    except:
+        print("Invalid Input")
+    input("Press Enter To Continue")
+    clear()        
 def menu1():
        while True:
               print("=========MENU=========")
@@ -250,7 +248,7 @@ def menu1():
 def menu2():
        while True:
               print("=========MENU=========")
-              tab=[["==Select Your Choice=="],["1.Display Stock Record"],["2.Add Stock Record"],["3.Modify Stock Record"],["4.Delete Stock Record"],["5.Search Stock Record"],["6.Exit"]]
+              tab=[["==Select Your Choice=="],["1.Display Stock Record"],["2.Add Stock Record"],["3.Modify Stock Record"],["4.Delete Stock Record"],["5.Search Stock Record"],["6.Display All Sales"],["7.Exit"]]
               print(tabulate(tab))
               ch=int(input("Enter Your Choice:"))
               if ch==1:
@@ -270,32 +268,46 @@ def menu2():
                      searchstockreco()
               elif ch==6:
                      clear()
-                     break
+                     dispsale()
+              elif ch==7:
+                  clear()
+                  break
               else:
                      print("Invalid Choice")
                      clear()      
 while True:
-              print("=========MENU=========")
-              tab=[["==Select Your Choice=="],["1.Initial Setup"],["2.Customer Mode"],["3.Employee Mode"],["4.Exit"]]
-              print(tabulate(tab))
-              ch=int(input("Enter Your Choice:"))
-              if ch==1:
-                     setup1()
-              elif ch==2:
-                     setup2()
-                     clear()
-                     adddetail()
-                     clear()
-                     menu1()
-                     clear()
-              elif ch==3:
-                     setup2()
-                     clear()
-                     menu2()
-                     clear()
-              elif ch==4:
-                     clear()
-                     break
-              else:
-                     print("Invalid Choice")
-                     clear()
+    print("=========MENU=========")
+    tab=[["==Select Your Choice=="],["1.Initial Setup"],["2.Customer Mode"],["3.Employee Mode"],["4.Exit"]]
+    print(tabulate(tab))
+    ch=int(input("Enter Your Choice:"))
+    if ch==1:
+        setup1()
+    file=open("Data.csv")
+    reader=csv.reader(file)
+    try:
+        for rec in reader:
+            a1=rec[0]
+            a2=rec[1]
+            a3=rec[2]
+            mycon=ms.connect(host=a1,user=a2,passwd=a3,database="mysql")
+            if mycon.is_connected()==True:
+                mycur=mycon.cursor()
+                mycur.execute("use supermarketretail")
+                mycon.commit()
+    except:
+        pass
+        if ch==2:
+            adddetail()
+            clear()
+            menu1()
+            clear()
+        elif ch==3:
+            menu2()
+            clear()
+        elif ch==4:
+            clear()
+            break
+        else:
+            print("Invalid Choice")
+            clear()
+    
