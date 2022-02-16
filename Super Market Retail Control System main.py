@@ -2,14 +2,25 @@ import mysql.connector as ms
 from tabulate import tabulate
 import os
 from time import sleep
+import csv
 clear = lambda: os.system('cls')
-mycon=ms.connect(host="localhost",user="root",passwd="nps@123",database="mysql")
-if mycon.is_connected()==True:
-       print("Connection Established")
-       mycur=mycon.cursor()
-       sleep(1)
-       clear()
+
 def setup1():
+    a1=input("Enter Host name:")
+    a2=input("Enter user name:")
+    a3=input("Enter Password:")
+    data=[a1,a2,a3]
+    file=open("Data.csv","w")
+    writer = csv.writer(file)
+    writer.writerow(data)
+    file.close()
+    mycon=ms.connect(host=a1,user=a2,passwd=a3,database="mysql")
+    if mycon.is_connected()==True:
+        print("Connection Established")
+        mycur=mycon.cursor()
+    sleep(1)
+    clear()
+    print("Installing required items...Please Wait")   
     mycur.execute("create database supermarketretail")
     mycur.execute("use supermarketretail")
     mycur.execute("create table stock(itemcode int primary key not null,itemname varchar(30) not null,qty int,price float(15,2),discount float(15,2),dealername varchar(30))")
@@ -21,6 +32,17 @@ def setup1():
     mycon.commit()
     clear()
 def setup2():
+    file=open("Data.csv")
+    reader=csv.reader(file)
+    try:
+        for rec in reader:
+            a1=rec[0]
+            a2=rec[1]
+            a3=rec[2]
+    except:
+        pass
+    mycon=ms.connect(host=a1,user=a2,passwd=a3,database="mysql")
+    mycur=mycon.cursor()
     mycur.execute("use supermarketretail")
     mycon.commit()
 def displaystockreco():
