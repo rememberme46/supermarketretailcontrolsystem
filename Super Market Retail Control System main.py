@@ -3,16 +3,12 @@ from tabulate import tabulate
 import os
 from time import sleep
 clear = lambda: os.system('cls')
-
-
-
 mycon=ms.connect(host="localhost",user="root",passwd="nps@123",database="mysql")
 if mycon.is_connected()==True:
        print("Connection Established")
        mycur=mycon.cursor()
        sleep(1)
        clear()
-
 def setup1():
     mycur.execute("create database supermarketretail")
     mycur.execute("use supermarketretail")
@@ -23,7 +19,6 @@ def setup1():
     print("Initial Setup Done")
     input("Press Enter to Continue")
     mycon.commit()
-    input("Press Enter To Continue")
     clear()
 def setup2():
     mycur.execute("use supermarketretail")
@@ -40,9 +35,7 @@ def displaystockreco():
        except:
               print("Invalid Choice")
        input("Press Enter To Continue")
-       clear()
-       
-              
+       clear()        
 def addstockreco():
        try:
               itemcode=int(input("Enter Item Code:"))
@@ -61,7 +54,6 @@ def addstockreco():
        clear()
 def delstockreco():
        try:
-       
               itemdel=int(input("Enter Item Code to be Deleted"))
               query="select * from stock where itemcode="+str(itemdel)
               mycur.execute(query)
@@ -97,7 +89,6 @@ def searchstockreco():
                      print("Record Not Available")
        input("Press Enter To Continue")
        clear()
-
 def modifystockreco():
        try:
               query=("select * from stock")
@@ -142,16 +133,12 @@ def modifystockreco():
               mydata=mycur.fetchone()
               modtable.append(list(mydata))
               print(tabulate(modtable))
-              mycon.commit()
-              
+              mycon.commit()  
        except:
               if mydata==None:
                      print("Record Not Available")
        input("Press Enter To Continue")
-       clear()
-
-
-       
+       clear()  
 def dispbuyreco():
        query="select itemcode,itemname,qty,price,discount from stock"
        mycur.execute(query)
@@ -161,42 +148,44 @@ def dispbuyreco():
               table.append(rec)
        print(tabulate(table))
        input("Press Enter To Continue")
-       
 def buyreco():
+       global dtot
+       dtot=0
        try:
-              global dtot
-              
               tot=0
-              dtot=0
               p1=int(input("Enter itemcode you want to buy:"))
               p2=int(input("Enter number you want to buy:"))
               mycur.execute("use supermarketretail")
-              query=("select price,discount,qty from stock where itemcode=")+str(p1)
+              query=("select stock.price,stock.discount,stock.qty,salerecord.amtpay from stock,salerecord where stock.itemcode={} and salerecord.customername='{}'").format(p1,i1)
               mycur.execute(query)
               data=mycur.fetchone()
-              a,b,c=data
-              if c!=0:
-                     d=c-p2
-                     tot=tot+(p2*(a))
-                     dtot=tot*((100-b)/100)
-                     query=("update salerecord set amtpay={} where customername='{}'").format(dtot,i1)
-                     mycur.execute(query)
-                     mycon.commit()
-                     query=("update stock set qty={} where itemcode={}").format(d,p1)
-                     mycur.execute(query)
-                     mycon.commit()
-                     input("ADDED TO CART,Press to continue")
+              mycon.commit()
+              a,b,c,dtot=data
+              if dtot==None:
+                     dtot=0
+              if c>=p2:
+                     if c!=0:
+                            d=c-p2
+                            tot=tot+(p2*(a))
+                            dtot+=tot*((100-b)/100)
+                            query=("update salerecord set amtpay={} where customername='{}'").format(dtot,i1)
+                            mycur.execute(query)
+                            mycon.commit()
+                            query=("update stock set qty={} where itemcode={}").format(d,p1)
+                            mycur.execute(query)
+                            mycon.commit()
+                            input("ADDED TO CART,Press to continue")
+                     else:
+                            print("OUT OF STOCK")
+                            input("Press Enter to continue")
+                            clear()
+                            menu1()
               else:
-                     print("OUT OF STOCK")
-                     input("Press Enter to continue")
-                     clear()
-                     menu1()
+                     print("QTY Entered exceeds stock amount")
+                     input("Press enter to continue")
        except:
               input("Please use valid choice")
               clear()
-
-
-      
 def viewbill():
        query=("select customername,amtpay from salerecord where customername='{}'").format(i1)
        mycur.execute(query)
@@ -207,8 +196,6 @@ def viewbill():
        print(tabulate(table))
        input("Press enter to continue")
        clear()
-       
-       
 def adddetail():
        global i1
        i1=input("Enter Customer Name:")
@@ -218,21 +205,17 @@ def adddetail():
        mycon.commit()
        input("Press Enter To Continue")
        clear()
-       
-
 def menu1():
        while True:
               print("=========MENU=========")
               tab=[["==Select Your Choice=="],["1.VIEW INVENTORY AND BUY"],["2.View Bill"],["3.Exit"]]
               print(tabulate(tab))
               ch=int(input("Enter Your Choice:"))
-              
               if ch==1:
                      clear()
                      dispbuyreco()
                      buyreco()
               elif ch==2:
-                     
                      clear()
                      viewbill()
               elif ch==3:
@@ -241,10 +224,7 @@ def menu1():
               else:
                      print("Invalid choice")
                      clear()
-             
-              
 def menu2():
-       
        while True:
               print("=========MENU=========")
               tab=[["==Select Your Choice=="],["1.Display Stock Record"],["2.Add Stock Record"],["3.Modify Stock Record"],["4.Delete Stock Record"],["5.Search Stock Record"],["6.Exit"]]
@@ -253,30 +233,24 @@ def menu2():
               if ch==1:
                      clear()
                      displaystockreco()
-                     
               elif ch==2:
                      clear()
                      addstockreco()
-                     
               elif ch==3:
                      clear()
                      modifystockreco()
-                     
               elif ch==4:
                      clear()
                      delstockreco()
-                    
               elif ch==5:
                      clear()
                      searchstockreco()
-                     
               elif ch==6:
                      clear()
                      break
               else:
                      print("Invalid Choice")
-                     clear()
-              
+                     clear()      
 while True:
               print("=========MENU=========")
               tab=[["==Select Your Choice=="],["1.Initial Setup"],["2.Customer Mode"],["3.Employee Mode"],["4.Exit"]]
@@ -302,7 +276,3 @@ while True:
               else:
                      print("Invalid Choice")
                      clear()
-
-
-
-                            
