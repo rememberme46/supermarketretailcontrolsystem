@@ -186,6 +186,7 @@ def buyreco():
        except:
               input("Please use valid choice")
               clear()
+       clear()
 def viewbill():
        query=("select customername,amtpay from salerecord where customername='{}'").format(i1)
        mycur.execute(query)
