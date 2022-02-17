@@ -185,7 +185,7 @@ def buyreco():
                             clear()
                             menu1()
               else:
-                     print("Quantity Entered exceeds stock amount")
+                     print("Quantity Entered Exceeds Stock Amount")
                      input("Press Enter To Continue")
        except:
               input("Please Use Valid Choice")
@@ -278,7 +278,8 @@ while True:
 1.Initial Setup
 2.Customer Mode
 3.Employee Mode
-4.Exit''')
+4.Exit
+======================''')
     ch=int(input("Enter Your Choice:"))
     if ch==1:
         setup1()
