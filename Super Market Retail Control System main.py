@@ -1,5 +1,4 @@
 import mysql.connector as ms
-from tabulate import tabulate
 import os
 from time import sleep
 import csv
@@ -89,8 +88,6 @@ def searchstockreco():
                      deltable.append(list(mydata))
                      print("Record Found And Is Available")
                      print(tabulate(deltable))
-              mycur.execute(query)
-              mycon.commit()
        except:
               if mydata==None:
                      print("Record Not Available")
@@ -225,7 +222,7 @@ def dispsale():
     except:
         print("Invalid Input")
     input("Press Enter To Continue")
-    clear()        
+    clear()  
 def menu1():
        while True:
               print("=========MENU=========")
@@ -274,14 +271,18 @@ def menu2():
                   break
               else:
                      print("Invalid Choice")
-                     clear()      
+                     clear()
 while True:
     print("=========MENU=========")
-    tab=[["==Select Your Choice=="],["1.Initial Setup"],["2.Customer Mode"],["3.Employee Mode"],["4.Exit"]]
-    print(tabulate(tab))
+    print('''==Select Your Choice==
+1.Initial Setup
+2.Customer Mode
+3.Employee Mode
+4.Exit''')
     ch=int(input("Enter Your Choice:"))
     if ch==1:
         setup1()
+    from tabulate import tabulate
     file=open("Data.csv")
     reader=csv.reader(file)
     try:
@@ -311,4 +312,3 @@ while True:
         else:
             print("Invalid Choice")
             clear()
-    
