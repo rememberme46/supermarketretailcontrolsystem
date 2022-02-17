@@ -5,7 +5,7 @@ import csv
 clear = lambda: os.system('cls')
 def setup1():
     a1=input("Enter Host name:")
-    a2=input("Enter user name:")
+    a2=input("Enter User Name:")
     a3=input("Enter Password:")
     data=[a1,a2,a3]
     file=open("Data.csv","w")
@@ -18,7 +18,7 @@ def setup1():
         mycur=mycon.cursor()
     sleep(1)
     clear()
-    print("Installing required items...Please Wait")   
+    print("Installing Required Items...Please Wait")   
     mycur.execute("create database supermarketretail")
     mycur.execute("use supermarketretail")
     mycur.execute("create table stock(itemcode int primary key not null,itemname varchar(30) not null,qty int,price float(15,2),discount float(15,2),dealername varchar(30))")
@@ -60,7 +60,7 @@ def addstockreco():
        clear()
 def delstockreco():
        try:
-              itemdel=int(input("Enter Item Code to be Deleted"))
+              itemdel=int(input("Enter Item Code to be Deleted:"))
               query="select * from stock where itemcode="+str(itemdel)
               mycur.execute(query)
               mydata=mycur.fetchone()
@@ -68,7 +68,7 @@ def delstockreco():
               if mydata!=None:
                      deltable.append(list(mydata))
                      print(tabulate(deltable))
-                     ans=input("Do you want to Delete?:")
+                     ans=input("Do you want to Delete?(Y/N):")
                      if ans=="y" or ans=="Y":
                             query="delete from stock where itemcode="+str(itemdel)
               mycur.execute(query)
@@ -114,7 +114,7 @@ def modifystockreco():
                      print("3.Price")
                      print("4.Discount")
                      print("5.Dealer Name")
-                     ch=int(input("Enter Your Choice"))
+                     ch=int(input("Enter Your Choice:"))
                      if ch==1:
                             i1=input("Enter New Item Name:")
                             query="update stock set itemname='{}' where itemcode={}".format(i1,s)
@@ -157,8 +157,8 @@ def buyreco():
        dtot=0
        try:
               tot=0
-              p1=int(input("Enter itemcode you want to buy:"))
-              p2=int(input("Enter number you want to buy:"))
+              p1=int(input("Enter Itemcode You Want To Buy:"))
+              p2=int(input("Enter Number You Want To Buy:"))
               mycur.execute("use supermarketretail")
               query=("select stock.price,stock.discount,stock.qty,salerecord.amtpay from stock,salerecord where stock.itemcode={} and salerecord.customername='{}'").format(p1,i1)
               mycur.execute(query)
@@ -185,10 +185,10 @@ def buyreco():
                             clear()
                             menu1()
               else:
-                     print("QTY Entered exceeds stock amount")
-                     input("Press enter to continue")
+                     print("Quantity Entered exceeds stock amount")
+                     input("Press Enter To Continue")
        except:
-              input("Please use valid choice")
+              input("Please Use Valid Choice")
               clear()
        clear()
 def viewbill():
@@ -199,12 +199,12 @@ def viewbill():
        table=[["NAME","AMOUNT PAYABALE"]]
        table.append(list(data))
        print(tabulate(table))
-       input("Press enter to continue")
+       input("Press Enter To Continue")
        clear()
 def adddetail():
        global i1
        i1=input("Enter Customer Name:")
-       i2=int(input("Enter customer phone number:"))
+       i2=int(input("Enter Customer Phone Number:"))
        query="insert into salerecord(customername,phoneno) values('{}',{})".format(i1,i2)
        mycur.execute(query)
        mycon.commit()
@@ -240,7 +240,7 @@ def menu1():
                      clear()
                      break
               else:
-                     print("Invalid choice")
+                     print("Invalid Choice")
                      clear()
 def menu2():
        while True:
