@@ -179,6 +179,9 @@ def buyreco():
                             mycur.execute(query)
                             mycon.commit()
                             input("ADDED TO CART,Press to continue")
+                            ch=input("Would you like to buy more items?(Y/N)")
+                            if ch=="y" or ch=="Y":
+                                buyreco()
                      else:
                             print("OUT OF STOCK")
                             input("Press Enter to continue")
