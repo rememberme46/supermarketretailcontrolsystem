@@ -160,18 +160,19 @@ def buyreco():
               p1=int(input("Enter Itemcode You Want To Buy:"))
               p2=int(input("Enter Number You Want To Buy:"))
               mycur.execute("use supermarketretail")
-              query=("select stock.price,stock.discount,stock.qty,salerecord.amtpay from stock,salerecord where stock.itemcode={} and salerecord.customername='{}'").format(p1,i1)
+              query=("select stock.price,stock.discount,stock.qty,salerecord.amtpay,stock.itemname from stock,salerecord where stock.itemcode={} and salerecord.customername='{}'").format(p1,i1)
               mycur.execute(query)
               data=mycur.fetchone()
               mycon.commit()
-              a,b,c,dtot=data
+              a,b,c,dtot,e=data
               if dtot==None:
                      dtot=0
               if c>=p2:
                      if c!=0:
                             d=c-p2
-                            tot=tot+(p2*(a))
-                            dtot+=tot*((100-b)/100)
+                            tot=p2*(a)
+                            trtot=tot*((100-b)/100)
+                            dtot+=trtot
                             query=("update salerecord set amtpay={} where customername='{}'").format(dtot,i1)
                             mycur.execute(query)
                             mycon.commit()
@@ -179,6 +180,8 @@ def buyreco():
                             mycur.execute(query)
                             mycon.commit()
                             input("ADDED TO CART,Press to continue")
+                            tr=[e,p2,a,b,trtot]
+                            cart.append(list(tr))
                             ch=input("Would you like to buy more items?(Y/N)")
                             if ch=="y" or ch=="Y":
                                 buyreco()
@@ -195,11 +198,12 @@ def buyreco():
               clear()
        clear()
 def viewbill():
+       print("======BILL======")
+       print(tabulate(cart))
        query=("select customername,amtpay from salerecord where customername='{}'").format(i1)
        mycur.execute(query)
        data=mycur.fetchone()
-       print("======BILL======")
-       table=[["NAME","AMOUNT PAYABALE"]]
+       table=[["NAME","TOTAL AMOUNT PAYABALE"]]
        table.append(list(data))
        print(tabulate(table))
        input("Press Enter To Continue")
@@ -227,6 +231,8 @@ def dispsale():
     input("Press Enter To Continue")
     clear()  
 def menu1():
+       global cart
+       cart=[["ITEM NAME","QUANTITY","PRICE","DISCOUNT"," AMOUNT"]]
        while True:
               print("=========MENU=========")
               tab=[["==Select Your Choice=="],["1.VIEW INVENTORY AND BUY"],["2.View Bill"],["3.Exit"]]
