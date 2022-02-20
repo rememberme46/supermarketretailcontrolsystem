@@ -1,9 +1,10 @@
-import mysql.connector as ms
 import os
 from time import sleep
 import csv
 clear = lambda: os.system('cls')
 def setup1():
+    os.system("pip install mysql-connector-python")
+    import mysql.connector as ms
     a1=input("Enter Host name:")
     a2=input("Enter User Name:")
     a3=input("Enter Password:")
@@ -126,7 +127,7 @@ def modifystockreco():
                             query="update stock set price={} where itemcode={}".format(i3,s)
                      elif ch==4:
                             i4=int(input("Enter New Discount:"))
-                            query="update stock set itemname={} where itemcode={}".format(i4,s)
+                            query="update stock set discount={} where itemcode={}".format(i4,s)
                      elif ch==5:
                             i5=input("Enter New Dealer Name:")
                             query="update stock set dealername='{}' where itemcode={}".format(i5,s)
@@ -300,6 +301,7 @@ while True:
             a1=rec[0]
             a2=rec[1]
             a3=rec[2]
+            import mysql.connector as ms
             mycon=ms.connect(host=a1,user=a2,passwd=a3,database="mysql")
             if mycon.is_connected()==True:
                 mycur=mycon.cursor()
